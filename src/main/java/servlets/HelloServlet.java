@@ -1,4 +1,4 @@
-package servlet;
+package servlets;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,18 +9,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 
-
-@WebServlet(name = "someServlet", value = "/hello")
-public class SomeClass extends HttpServlet {
+@WebServlet("/")
+public class HelloServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         resp.setContentType("text/html");
         PrintWriter printWriter = resp.getWriter();
-        printWriter.write("Hello!");
-        printWriter.close();
 
+        printWriter.write("Welcome to PlayerDataBase!");
+        printWriter.close();
 
     }
 

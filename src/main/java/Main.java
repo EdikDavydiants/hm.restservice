@@ -1,34 +1,38 @@
+import repository.PlayersDAO;
+import service.Player;
+
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 
 public class Main {
 
-    public static String URL = "jdbc:mysql://localhost:3306/sakila";
-    public static String USERNAME = "root";
-    public static String PASSWORD = "dfhtut5674ebdfh567j";
 
+    //CREATE TABLE players (id INT, first_name VARCHAR(30), last_name VARCHAR(30), elo INT)
 
     public static void main(String[] args) throws SQLException {
 
-        //System.out.println("hell");
 
-//        Connection connection = null;
+
+        List<Player> playerList = PlayersDAO.getAllPlayers();
+
+
+        System.out.println(playerList);
+
+
+//        try (Connection connection = DBUtils.getConnection();
+//             PreparedStatement preparedStatement = connection.prepareStatement("")) {
 //
-//        try {
-//            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+//            preparedStatement.executeUpdate();
+//
 //        } catch (SQLException e) {
-//
+//            e.printStackTrace();
 //        }
-//
-//        Statement statement = connection.createStatement();
-//
-//        ResultSet resultSet = statement.executeQuery("select * from players");
-//
-//        while (resultSet.next()) {
-//
-//            int id = resultSet.getInt("id");
-//            System.out.println(id);
-//        }
+
+
+
     }
 
 
