@@ -2,6 +2,7 @@ package service;
 
 import java.io.PrintWriter;
 
+
 public class Player {
     private final int id;
     private final String firstName;
@@ -17,8 +18,8 @@ public class Player {
     }
 
 
-    public void printInHTMLForm(PrintWriter printWriter) {
-        printWriter.write(id + "   " + firstName + " " + lastName + "  " + elo + "<br>");
+    public String printInHTMLForm() {
+        return id + "   " + firstName + " " + lastName + "  " + elo + "<br>";
     }
 
 

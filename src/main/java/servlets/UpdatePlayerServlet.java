@@ -28,7 +28,7 @@ public class UpdatePlayerServlet extends HttpServlet {
         List<Player> playerList = PlayersDAO.getAllPlayers();
 
         for (Player player: playerList) {
-            player.printInHTMLForm(printWriter);
+            printWriter.write(player.printInHTMLForm());
         }
 
         printWriter.close();

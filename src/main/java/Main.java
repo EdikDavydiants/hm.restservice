@@ -16,10 +16,10 @@ public class Main {
 
 
 
-        List<Player> playerList = PlayersDAO.getAllPlayers();
+        //List<Player> playerList = PlayersDAO.getAllPlayers();
 
 
-        System.out.println(playerList);
+        //System.out.println(playerList);
 
 
 //        try (Connection connection = DBUtils.getConnection();

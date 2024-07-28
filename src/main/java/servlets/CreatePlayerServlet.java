@@ -25,11 +25,13 @@ public class CreatePlayerServlet extends HttpServlet {
         String lastName = req.getParameter("lastname");
         int elo = Integer.parseInt(req.getParameter("elo"));
 
-        PlayersDAO.createPlayer(new Player(id, firstName, lastName, elo));
-        List<Player> playerList = PlayersDAO.getAllPlayers();
-
-        for (Player player: playerList) {
-            player.printInHTMLForm(printWriter);
+        if (PlayersDAO.createPlayer(new Player(id, firstName, lastName, elo))) {
+            List<Player> playerList = PlayersDAO.getAllPlayers();
+            for (Player player: playerList) {
+                printWriter.write(player.printInHTMLForm());
+            }
+        } else {
+            printWriter.write("Error. Id can be invalid.");
         }
 
         printWriter.close();

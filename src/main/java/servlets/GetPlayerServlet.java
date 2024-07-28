@@ -27,7 +27,7 @@ public class GetPlayerServlet extends HttpServlet {
         if (player == null) {
             printWriter.write("No such player.");
         } else {
-            player.printInHTMLForm(printWriter);
+            printWriter.write(player.printInHTMLForm());
         }
 
         printWriter.close();

@@ -12,12 +12,15 @@ import java.util.List;
 
 
 public class PlayersDAO {
-
+    public final static String id_DBStr = "id";
+    public final static String first_name_DBStr = "first_name";
+    public final static String last_name_DBStr = "last_name";
+    public final static String elo_DBStr = "elo";
     private final static String GET_ALL_PLAYERS_QUERY = "SELECT * FROM players";
-    private final static String GET_PLAYER_QUERY = "SELECT * FROM players WHERE id = ?";
+    private final static String GET_PLAYER_QUERY = "SELECT * FROM players WHERE " + id_DBStr + " = ?";
     private final static String CREATE_PLAYER_QUERY = "INSERT INTO players VALUES (?, ?, ?, ?)";
-    private final static String UPDATE_PLAYER_QUERY = "UPDATE players SET elo = ? WHERE id = ?";
-    private final static String DELETE_PLAYER_QUERY = "DELETE FROM players WHERE id = ?";
+    private final static String UPDATE_PLAYER_QUERY = "UPDATE players SET " + elo_DBStr + " = ? WHERE " + id_DBStr + " = ?";
+    private final static String DELETE_PLAYER_QUERY = "DELETE FROM players WHERE " + id_DBStr + " = ?";
 
 
     public static List<Player> getAllPlayers() {
@@ -31,10 +34,10 @@ public class PlayersDAO {
             playerList = new ArrayList<>();
 
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String firstName = rs.getString("first_name");
-                String lastName = rs.getString("last_name");
-                int elo = rs.getInt("elo");
+                int id = rs.getInt(id_DBStr);
+                String firstName = rs.getString(first_name_DBStr);
+                String lastName = rs.getString(last_name_DBStr);
+                int elo = rs.getInt(elo_DBStr);
 
                 playerList.add(new Player(id, firstName, lastName, elo));
             }
@@ -48,7 +51,7 @@ public class PlayersDAO {
 
 
     public static Player getPlayer(int id) {
-        List<Player> playerList = new ArrayList<>();
+        Player player = null;
 
         try (Connection connection = DBUtils.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_PLAYER_QUERY)) {
@@ -56,40 +59,43 @@ public class PlayersDAO {
             preparedStatement.setString(1, String.valueOf(id));
             ResultSet rs = preparedStatement.executeQuery();
 
-            while (rs.next()) {
-                int id_ = rs.getInt("id");
-                String firstName = rs.getString("first_name");
-                String lastName = rs.getString("last_name");
-                int elo = rs.getInt("elo");
+            if(rs.next()) {
+                int id_ = rs.getInt(id_DBStr);
+                String firstName = rs.getString(first_name_DBStr);
+                String lastName = rs.getString(last_name_DBStr);
+                int elo = rs.getInt(elo_DBStr);
 
-                playerList.add(new Player(id_, firstName, lastName, elo));
+                player = new Player(id_, firstName, lastName, elo);
+                if (rs.next()) { player = null; }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        if(playerList.size() != 1) {
-            return null;
-        } else {
-            return playerList.get(0);
-        }
+        return player;
     }
 
 
-    public static void createPlayer(Player player) {
-        try (Connection connection = DBUtils.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_PLAYER_QUERY)) {
-
-            preparedStatement.setString(1, String.valueOf(player.getId()));
-            preparedStatement.setString(2, player.getFirstName());
-            preparedStatement.setString(3, player.getLastName());
-            preparedStatement.setString(4, String.valueOf(player.getElo()));
-            preparedStatement.executeUpdate();
-
+    public static boolean createPlayer(Player player) {
+        try (Connection connection = DBUtils.getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(GET_PLAYER_QUERY)) {
+                if (player.getId() < 0) { return false; }
+                preparedStatement.setString(1, String.valueOf(player.getId()));
+                ResultSet rs = preparedStatement.executeQuery();
+                if(rs.next()) { return false; }
+            }
+            try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_PLAYER_QUERY)) {
+                preparedStatement.setString(1, String.valueOf(player.getId()));
+                preparedStatement.setString(2, player.getFirstName());
+                preparedStatement.setString(3, player.getLastName());
+                preparedStatement.setString(4, String.valueOf(player.getElo()));
+                preparedStatement.executeUpdate();
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
 
